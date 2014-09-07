@@ -20,7 +20,7 @@ double Line::dist(const Vector &A) const
 
 Vector Line::intersect(const Line &l) const
 {
-    if (a * l.b == b * l.a)
+    if (getNormal().cross(l.getNormal()) == 0)
     {
         return Vector(false);
     }
@@ -33,6 +33,7 @@ Vector Line::intersect(const Line &l) const
     }
     else
     {
+        // if l.a == 0 then this code is similar to previous
         double koeff = l.a / a;
         double _b = b * koeff;
         double _c = c * koeff;
