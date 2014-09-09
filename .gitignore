@@ -63,3 +63,6 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+# Artistic style originals
+*.orig
