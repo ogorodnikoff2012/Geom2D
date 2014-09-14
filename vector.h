@@ -57,6 +57,6 @@ public:
 
 extern Vector operator *(const double d, const Vector &v);
 extern std::istream &operator >>(std::istream &in, Vector &v);
-extern std::ostream &operator <<(std::ostream &out, Vector &v);
+extern std::ostream &operator <<(std::ostream &out, const Vector &v);
 
 #endif // VECTOR_H
