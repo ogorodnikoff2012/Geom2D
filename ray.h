@@ -8,8 +8,8 @@ class Ray : public Line
 {
 public:
     Vector end, direction;
-    Ray(const Vector &end, const Vector &direction) :
-        Line(end, end + direction),
+    Ray(const Vector &end, const Vector &direction, const bool isValid = true) :
+        Line(end, end + direction, isValid && end.isValid && direction.isValid),
         end(end),
         direction(direction)
     {

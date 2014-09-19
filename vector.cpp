@@ -6,22 +6,22 @@
 
 Vector Vector::operator -() const
 {
-    return Vector(-x, -y);
+    return Vector(-x, -y, isValid);
 }
 
 Vector Vector::operator +(const Vector &v) const
 {
-    return Vector(x + v.x, y + v.y);
+    return Vector(x + v.x, y + v.y, isValid && v.isValid);
 }
 
 Vector Vector::operator -(const Vector &v) const
 {
-    return Vector(x - v.x, y - v.y);
+    return Vector(x - v.x, y - v.y, isValid && isValid);
 }
 
 Vector Vector::operator *(const double d) const
 {
-    return Vector(x * d, y * d);
+    return Vector(x * d, y * d, isValid);
 }
 
 double Vector::operator *(const Vector &v) const
@@ -36,6 +36,10 @@ double Vector::cross(const Vector &v) const
 
 double Vector::operator ^(const Vector &v) const
 {
+    if(!(isValid && v.isValid))
+    {
+        return -100;
+    }
     return atan2(this->cross(v), this->operator *(v));
 }
 
@@ -46,6 +50,10 @@ Vector operator *(const double d, const Vector &v)
 
 double Vector::length() const
 {
+    if(!isValid)
+    {
+        return -100;
+    }
     return sqrt(x * x + y * y);
 }
 
@@ -61,13 +69,14 @@ double Vector::dist(const Line &l) const
 
 bool Vector::operator ==(const Vector &v) const
 {
-    return equal(x, v.x) && equal(y, v.y);
+    return isValid && v.isValid && equal(x, v.x) && equal(y, v.y);
 }
 
 Vector Vector::operator +=(const Vector &v)
 {
     x += v.x;
     y += v.y;
+    isValid &= v.isValid;
     return *this;
 }
 
@@ -75,6 +84,7 @@ Vector Vector::operator -=(const Vector &v)
 {
     x -= v.x;
     y -= v.y;
+    isValid &= v.isValid;
     return *this;
 }
 
@@ -88,8 +98,11 @@ Vector Vector::operator *=(double d)
 Vector Vector::normalize()
 {
     double l = length();
-    x /= l;
-    y /= l;
+    if(l != 0)
+    {
+        x /= l;
+        y /= l;
+    }
     return *this;
 }
 
@@ -102,12 +115,12 @@ Vector Vector::normalized() const
 
 Vector Vector::getNormal() const
 {
-    return Vector(y, -x).normalize();
+    return Vector(y, -x, isValid).normalize();
 }
 
 bool Vector::operator ||(const Vector &v) const
 {
-    return equal(x * v.y, y * v.x);
+    return isValid && v.isValid && equal(x * v.y, y * v.x);
 }
 
 Vector Vector::rotated(const double phi) const

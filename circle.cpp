@@ -4,25 +4,31 @@
 #include <cmath>
 #include "math_ext.h"
 
-Circle::Circle(const Vector &center, const Vector &A) :
+Circle::Circle(const Vector &center, const Vector &A, const bool isValid_) :
     x(center.x),
     y(center.y),
     r(center.dist(A)),
-    isValid(true)
+    isValid(isValid_ && center.isValid && A.isValid)
 {
 
 }
 
-Circle::Circle(const Vector &center, const double r) :
+Circle::Circle(const Vector &center, const double r, const bool isValid_) :
     x(center.x),
     y(center.y),
-    r(r)
+    r(r),
+    isValid(isValid_ && center.isValid)
 {
 
 }
 
 std::pair<Line, Line> Circle::tangents(const Vector &A) const
 {
+    if(!(isValid && A.isValid))
+    {
+        return std::pair<Line, Line>(Line(false), Line(false));
+    }
+
     Vector O(x, y);
 
     double oxProjection = r * r / O.dist(A);
@@ -46,6 +52,11 @@ std::pair<Line, Line> Circle::tangents(const Vector &A) const
 
 std::pair<Vector, Vector> Circle::intersect(const Line &l) const
 {
+    if(!(isValid && l.isValid))
+    {
+        return std::pair<Vector, Vector>(Vector(false), Vector(false));
+    }
+
     Vector O(x, y);
     Vector H = l.projection(O);
 
@@ -71,12 +82,12 @@ std::pair<Vector, Vector> Circle::intersect(const Circle &c) const
     double a = 2 * (c.x - x);
     double b = 2 * (c.y - y);
     double c_ = x * x - c.x * c.x + y * y - c.y * c.y + c.r * c.r - r * r;
-    return intersect(Line(a, b, c_));
+    return intersect(Line(a, b, c_, c.isValid));
 }
 
 bool Circle::operator ==(const Circle &c) const
 {
-    return equal(x, c.x) && equal(y, c.y) && equal(r, c.r);
+    return isValid && c.isValid && equal(x, c.x) && equal(y, c.y) && equal(r, c.r);
 }
 
 std::pair<Line, Line> Circle::commonTangents(const Circle &c,
@@ -87,6 +98,11 @@ std::pair<Line, Line> Circle::commonTangents(const Circle &c,
 
 std::pair<Line, Line> Circle::commonOuterTangents(const Circle &c) const
 {
+    if(!(isValid && c.isValid) || (Vector(x, y).dist(Vector(c.x, c.y)) < fabs(r - c.r)))
+    {
+        return std::pair<Line, Line>(Line(false), Line(false));
+    }
+
     Vector point;
     Circle pseudo;
 
@@ -138,6 +154,11 @@ std::pair<Line, Line> Circle::commonOuterTangents(const Circle &c) const
 
 std::pair<Line, Line> Circle::commonInnerTangents(const Circle &c) const
 {
+    if(!(isValid && c.isValid) || (Vector(x, y).dist(Vector(c.x, c.y)) < r + c.r))
+    {
+        return std::pair<Line, Line>(Line(false), Line(false));
+    }
+    
     Vector point(c.x, c.y);
     Circle pseudo(x, y, r + c.r);
 
@@ -165,12 +186,20 @@ std::pair<Line, Line> Circle::commonInnerTangents(const Circle &c) const
 
 bool Circle::isTangent(const Line &l) const
 {
+    if(!(isValid && l.isValid))
+    {
+        return false;
+    }
     Vector O(x, y);
     return equal(r, (O - l.projection(O)).length());
 }
 
 int Circle::where(const Vector &v) const
 {
+    if(!(isValid && v.isValid))
+    {
+        return -100;
+    }
     Vector O(x, y);
     return signum((O - v).length() - r);
 }

@@ -9,12 +9,7 @@ class Polygon
 public:
     std::vector<Vector> points;
     bool isValid;
-    Polygon(const std::vector<Vector> &points) :
-        points(points),
-        isValid(true)
-    {
-
-    }
+    Polygon(const std::vector<Vector> &points, const bool isValid = true);
     Polygon(const bool isValid = true) :
         isValid(isValid)
     {

@@ -11,11 +11,11 @@ class Circle
 public:
     double x, y, r;
     bool isValid;
-    Circle(const double x, const double y, const double r) :
+    Circle(const double x, const double y, const double r, const bool isValid = true) :
         x(x),
         y(y),
         r(r),
-        isValid(true)
+        isValid(isValid)
     {
 
     }
@@ -29,8 +29,8 @@ public:
 
     }
 
-    Circle(const Vector &center, const Vector &A);
-    Circle(const Vector &center, const double r);
+    Circle(const Vector &center, const Vector &A, const bool isValid = true);
+    Circle(const Vector &center, const double r, const bool isValid = true);
     std::pair<Line, Line> tangents(const Vector &v) const;
     std::pair<Vector, Vector> intersect(const Line &l) const;
     std::pair<Vector, Vector> intersect(const Circle &c) const;

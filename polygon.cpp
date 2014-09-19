@@ -7,8 +7,23 @@
 
 using namespace std;
 
+Polygon(const std::vector<Vector> &points, const bool isValid_) :
+        points(points)
+    {
+        isValid = isValid_;
+        for(int i = 0; i < points.size(); i++)
+        {
+            isValid &= points[i].isValid;
+        }
+    }
+
 double Polygon::area() const
 {
+    if(!isValid)
+    {
+        return -100;
+    }
+
     double ans = 0;
     int n = points.size();
 
@@ -23,6 +38,10 @@ double Polygon::area() const
 
 bool Polygon::isConvex() const
 {
+    if(!isValid)
+    {
+        return false;
+    }
     int n = points.size();
     int sign = signum((points[1] - points[0]).cross(points[n - 1] - points[0]));
 
@@ -40,6 +59,11 @@ bool Polygon::isConvex() const
 
 bool Polygon::hasPoint(const Vector &v) const
 {
+    if(!(isValid && v.isValid))
+    {
+        return false;
+    }
+
     double ans = 0;
     int n = points.size();
 
@@ -77,6 +101,11 @@ public:
 
 Polygon Polygon::convexHull() const
 {
+    if(!isValid)
+    {
+        return Polygon(false);
+    }
+
     std::vector<Vector> points = this->points;
     int idx = 0;
     int n = points.size();
@@ -116,6 +145,11 @@ Polygon Polygon::convexHull() const
 
 std::pair<Polygon, Polygon> Polygon::split(const Line &l) const
 {
+    if(!(isValid && l.isValid))
+    {
+        return std::pair<Polygon, Polygon>(Polygon(false), Polygon(false));
+    }
+    
     vector<Vector> first, second;
     int lastWhere = l.where(points[0]);
     for(int i = 0; i < points.size(); i++)

@@ -8,11 +8,11 @@ class Line
 public:
     double a, b, c;
     bool isValid;
-    Line(const double a, const double b, const double c) :
+    Line(const double a, const double b, const double c, const bool isValid = true) :
         a(a),
         b(b),
         c(c),
-        isValid(true)
+        isValid(isValid)
     {
 
     }
@@ -26,7 +26,7 @@ public:
 
     }
 
-    Line(const Vector &A, const Vector &B);
+    Line(const Vector &A, const Vector &B, const bool isValid = true);
     double dist(const Vector &A) const;
     Vector intersect(const Line &l) const;
     Line normalize();

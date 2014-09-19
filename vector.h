@@ -10,10 +10,10 @@ class Vector
 public:
     double x, y;
     bool isValid;
-    Vector(const double x, const double y) :
+    Vector(const double x, const double y, const bool isValid = true) :
         x(x),
         y(y),
-        isValid(true)
+        isValid(isValid)
     {
 
     }
