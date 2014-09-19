@@ -2,6 +2,10 @@
 #include <cmath>
 #include "math_ext.h"
 #include <algorithm>
+#include "line.h"
+#include "vector.h"
+
+using namespace std;
 
 double Polygon::area() const
 {
