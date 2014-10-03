@@ -28,7 +28,7 @@ Vector Line::intersect(const Line &l) const
     {
         return Vector(false);
     }
-    if (getNormal().cross(l.getNormal()) == 0)
+    if (getNormal() / l.getNormal() == 0)
     {
         return Vector(false);
     }

@@ -1,7 +1,6 @@
 #include <cmath>
 #include <iostream>
 #include "vector.h"
-#include "line.h"
 #include "math_ext.h"
 
 Vector Vector::operator -() const
@@ -29,7 +28,7 @@ double Vector::operator *(const Vector &v) const
     return x * v.x + y * v.y;
 }
 
-double Vector::cross(const Vector &v) const
+double Vector::operator /(const Vector &v) const
 {
     return x * v.y - y * v.x;
 }
@@ -40,7 +39,7 @@ double Vector::operator ^(const Vector &v) const
     {
         return -100;
     }
-    return atan2(this->cross(v), this->operator *(v));
+    return atan2((*this) / (v), (*this)*(v));
 }
 
 Vector operator *(const double d, const Vector &v)
@@ -60,11 +59,6 @@ double Vector::length() const
 double Vector::dist(const Vector &v) const
 {
     return (*this - v).length();
-}
-
-double Vector::dist(const Line &l) const
-{
-    return l.dist(*this);
 }
 
 bool Vector::operator ==(const Vector &v) const

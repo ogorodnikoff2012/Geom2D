@@ -1,8 +1,6 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-class Line;
-
 #include <iostream>
 
 class Vector
@@ -38,11 +36,10 @@ public:
     Vector operator -(const Vector &v) const;
     double operator *(const Vector &v) const;
     Vector operator *(const double d) const;
-    double cross(const Vector &v) const;
+    double operator /(const Vector &v) const;
     double operator ^(const Vector &v) const;
     double length() const;
     double dist(const Vector &v) const;
-    double dist(const Line &l) const;
     bool operator ==(const Vector &v) const;
     Vector operator +=(const Vector &v);
     Vector operator -=(const Vector &v);

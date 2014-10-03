@@ -29,10 +29,10 @@ double Polygon::area() const
 
     for (int i = 0; i < n - 1; i++)
     {
-        ans += points[i].cross(points[i + 1]);
+        ans += points[i] / (points[i + 1]);
     }
 
-    ans += points[n - 1].cross(points[0]);
+    ans += points[n - 1] / (points[0]);
     return fabs(ans / 2.0);
 }
 
@@ -43,11 +43,11 @@ bool Polygon::isConvex() const
         return false;
     }
     int n = points.size();
-    int sign = signum((points[1] - points[0]).cross(points[n - 1] - points[0]));
+    int sign = signum((points[1] - points[0]) / (points[n - 1] - points[0]));
 
     for (int i = 1; i < n - 1; i++)
     {
-        if (signum((points[i + 1] - points[i]).cross(points[i - 1] - points[i])) !=
+        if (signum((points[i + 1] - points[i]) / (points[i - 1] - points[i])) !=
                 sign)
         {
             return false;
@@ -94,7 +94,7 @@ public:
     bool operator ()(const Vector &a, const Vector &b) const
     {
         Vector v1 = a - base, v2 = b - base;
-        double c = v1.cross(v2);
+        double c = v1 / v2;
         return c > 0 || (equal(c, 0) && v1.length() < v2.length());
     }
 };
@@ -130,7 +130,7 @@ Polygon Polygon::convexHull() const
         Vector O = stack.back();
         Vector B = stack[stack.size() - 2];
 
-        while (stack.size() > 1 && (A - O).cross(B - O) < eps())
+        while (stack.size() > 1 && (A - O) / (B - O) < eps())
         {
             stack.pop_back();
             O = stack.back();
@@ -149,7 +149,7 @@ std::pair<Polygon, Polygon> Polygon::split(const Line &l) const
     {
         return std::pair<Polygon, Polygon>(Polygon(false), Polygon(false));
     }
-    
+
     vector<Vector> first, second;
     int lastWhere = l.where(points[0]);
     for(int i = 0; i < points.size(); i++)
