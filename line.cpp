@@ -54,7 +54,7 @@ Vector Line::intersect(const Line &l) const
 
 Line Line::normalize()
 {
-    double k = sqrt(a * a + b * b);
+    double k = sqrt(a * a + b * b) * signum(a);
     if(k != 0)
     {
         a /= k;

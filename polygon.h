@@ -2,7 +2,8 @@
 #define POLYGON_H
 
 #include <vector>
-#include <vector.h>
+#include "vector.h"
+#include "line.h"
 
 class Polygon
 {
