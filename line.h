@@ -1,6 +1,8 @@
 #ifndef LINE_H
 #define LINE_H
 
+namespace geom2d {
+
 class Vector;
 
 class Line
@@ -38,5 +40,5 @@ public:
     Vector projection(const Vector &v) const;
     void moveToVector(const Vector &v);
 };
-
+}
 #endif // LINE_H

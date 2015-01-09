@@ -4,6 +4,8 @@
 #include "vector.h"
 #include "line.h"
 
+namespace geom2d {
+
 class Ray : public Line
 {
 public:
@@ -18,5 +20,5 @@ public:
 
     double dist(Vector &v) const;
 };
-
+}
 #endif // RAY_H

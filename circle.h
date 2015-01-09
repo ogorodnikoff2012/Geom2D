@@ -3,6 +3,8 @@
 
 #include <utility>
 
+namespace geom2d
+{
 class Vector;
 class Line;
 
@@ -41,5 +43,5 @@ public:
     bool isTangent(const Line &l) const;
     int where(const Vector &v) const;
 };
-
+}
 #endif // CIRCLE_H

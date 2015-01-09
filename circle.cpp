@@ -4,6 +4,8 @@
 #include <cmath>
 #include "math_ext.h"
 
+using namespace geom2d;
+
 Circle::Circle(const Vector &center, const Vector &A, const bool isValid_) :
     x(center.x),
     y(center.y),
@@ -39,14 +41,14 @@ std::pair<Line, Line> Circle::tangents(const Vector &A) const
 
     switch (where(A))
     {
-        case 1:
-            return std::pair<Line, Line>(Line(A, X1), Line(A, X2));
+    case 1:
+        return std::pair<Line, Line>(Line(A, X1), Line(A, X2));
 
-        case 0:
-            return std::pair<Line, Line>(Line(A, A + (O - A).getNormal()), Line(false));
+    case 0:
+        return std::pair<Line, Line>(Line(A, A + (O - A).getNormal()), Line(false));
 
-        default:
-            return std::pair<Line, Line>(Line(false), Line(false));
+    default:
+        return std::pair<Line, Line>(Line(false), Line(false));
     }
 }
 
@@ -66,14 +68,14 @@ std::pair<Vector, Vector> Circle::intersect(const Line &l) const
 
     switch (where(H))
     {
-        case -1:
-            return std::pair<Vector, Vector>(H + HL, H - HL);
+    case -1:
+        return std::pair<Vector, Vector>(H + HL, H - HL);
 
-        case 0:
-            return std::pair<Vector, Vector>(H, Vector(false));
+    case 0:
+        return std::pair<Vector, Vector>(H, Vector(false));
 
-        default:
-            return std::pair<Vector, Vector>(Vector(false), Vector(false));
+    default:
+        return std::pair<Vector, Vector>(Vector(false), Vector(false));
     }
 }
 
@@ -158,7 +160,7 @@ std::pair<Line, Line> Circle::commonInnerTangents(const Circle &c) const
     {
         return std::pair<Line, Line>(Line(false), Line(false));
     }
-    
+
     Vector point(c.x, c.y);
     Circle pseudo(x, y, r + c.r);
 

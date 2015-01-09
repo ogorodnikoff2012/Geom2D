@@ -3,6 +3,8 @@
 #include "vector.h"
 #include "math_ext.h"
 
+using namespace geom2d;
+
 Vector Vector::operator -() const
 {
     return Vector(-x, -y, isValid);
@@ -42,7 +44,7 @@ double Vector::operator ^(const Vector &v) const
     return atan2((*this) / (v), (*this)*(v));
 }
 
-Vector operator *(const double d, const Vector &v)
+Vector geom2d::operator *(const double d, const Vector &v)
 {
     return v * d;
 }
@@ -132,13 +134,13 @@ Vector Vector::rotate(const double phi)
     return *this = rotated(phi);
 }
 
-std::istream &operator >>(std::istream &in, Vector &v)
+std::istream &geom2d::operator >>(std::istream &in, Vector &v)
 {
     in >> v.x >> v.y;
     return in;
 }
 
-std::ostream &operator <<(std::ostream &out, const Vector &v)
+std::ostream &geom2d::operator <<(std::ostream &out, const Vector &v)
 {
     out << v.x << ' ' << v.y;
     return out;

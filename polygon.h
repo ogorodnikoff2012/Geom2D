@@ -5,6 +5,8 @@
 #include "vector.h"
 #include "line.h"
 
+namespace geom2d {
+
 class Polygon
 {
 public:
@@ -22,6 +24,7 @@ public:
     bool isConvex() const;
     Polygon convexHull() const;
     std::pair<Polygon, Polygon> split(const Line &l) const;
+    Polygon intersection(const Polygon &p) const;
 };
-
+}
 #endif // POLYGON_H

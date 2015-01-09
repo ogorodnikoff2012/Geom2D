@@ -6,16 +6,17 @@
 #include "vector.h"
 
 using namespace std;
+using namespace geom2d;
 
-Polygon(const std::vector<Vector> &points, const bool isValid_) :
-        points(points)
+Polygon::Polygon(const std::vector<Vector> &points, const bool isValid_) :
+    points(points)
+{
+    isValid = isValid_;
+    for(int i = 0; i < points.size(); i++)
     {
-        isValid = isValid_;
-        for(int i = 0; i < points.size(); i++)
-        {
-            isValid &= points[i].isValid;
-        }
+        isValid &= points[i].isValid;
     }
+}
 
 double Polygon::area() const
 {
@@ -144,6 +145,7 @@ Polygon Polygon::convexHull() const
 }
 
 std::pair<Polygon, Polygon> Polygon::split(const Line &l) const
+// l.where(): First -> -1; Second -> 1
 {
     if(!(isValid && l.isValid))
     {
@@ -183,5 +185,33 @@ std::pair<Polygon, Polygon> Polygon::split(const Line &l) const
     ans.first.isValid = first.size() >= 3;
     ans.second.points = second;
     ans.second.isValid = second.size() >= 3;
+    return ans;
+}
+
+Polygon Polygon::intersection(const Polygon &p) const
+{
+    if(!(isValid && p.isValid))
+    {
+        return Polygon(false);
+    }
+
+    Polygon ans = p;
+    for(int i = 0, n = points.size(); i < n; i++)
+    {
+        Vector A = points[i], B = points[(i + 1) % n];
+        Line l(A, B);
+        std::pair<Polygon, Polygon> pp = ans.split(l);
+        if(l.where(points[(i + 2) % n]) == 1)
+        {
+            ans = pp.second;
+        }
+        else
+        {
+            ans = pp.first;
+        }
+    }
+
+    ans.isValid &= ans.points.size() >= 3;
+
     return ans;
 }

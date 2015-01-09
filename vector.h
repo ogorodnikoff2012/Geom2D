@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+namespace geom2d {
+
 class Vector
 {
 public:
@@ -52,8 +54,11 @@ public:
     Vector rotated(const double phi) const;
 };
 
-extern Vector operator *(const double d, const Vector &v);
-extern std::istream &operator >>(std::istream &in, Vector &v);
-extern std::ostream &operator <<(std::ostream &out, const Vector &v);
+Vector operator *(const double d, const Vector &v);
+std::istream &operator >>(std::istream &in, Vector &v);
+std::ostream &operator <<(std::ostream &out, const Vector &v);
+
+}
+
 
 #endif // VECTOR_H
