@@ -37,7 +37,7 @@ double Vector::operator /(const Vector &v) const
 
 double Vector::operator ^(const Vector &v) const
 {
-    if(!(isValid && v.isValid))
+    if (!(isValid && v.isValid))
     {
         return -100;
     }
@@ -51,7 +51,7 @@ Vector geom2d::operator *(const double d, const Vector &v)
 
 double Vector::length() const
 {
-    if(!isValid)
+    if (!isValid)
     {
         return -100;
     }
@@ -94,7 +94,7 @@ Vector Vector::operator *=(double d)
 Vector Vector::normalize()
 {
     double l = length();
-    if(l != 0)
+    if (l != 0)
     {
         x /= l;
         y /= l;

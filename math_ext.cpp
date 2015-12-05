@@ -20,7 +20,7 @@ double geom2d::toDegrees(const double rad)
 
 bool geom2d::equal(const double a, const double b)
 {
-    return abs(a - b) < EPS;
+    return std::abs(a - b) < EPS;
 }
 
 int geom2d::signum(double a)

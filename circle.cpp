@@ -26,7 +26,7 @@ Circle::Circle(const Vector &center, const double r, const bool isValid_) :
 
 std::pair<Line, Line> Circle::tangents(const Vector &A) const
 {
-    if(!(isValid && A.isValid))
+    if (!(isValid && A.isValid))
     {
         return std::pair<Line, Line>(Line(false), Line(false));
     }
@@ -54,7 +54,7 @@ std::pair<Line, Line> Circle::tangents(const Vector &A) const
 
 std::pair<Vector, Vector> Circle::intersect(const Line &l) const
 {
-    if(!(isValid && l.isValid))
+    if (!(isValid && l.isValid))
     {
         return std::pair<Vector, Vector>(Vector(false), Vector(false));
     }
@@ -100,7 +100,7 @@ std::pair<Line, Line> Circle::commonTangents(const Circle &c,
 
 std::pair<Line, Line> Circle::commonOuterTangents(const Circle &c) const
 {
-    if(!(isValid && c.isValid) || (Vector(x, y).dist(Vector(c.x, c.y)) < fabs(r - c.r)))
+    if (!(isValid && c.isValid) || (Vector(x, y).dist(Vector(c.x, c.y)) < fabs(r - c.r)))
     {
         return std::pair<Line, Line>(Line(false), Line(false));
     }
@@ -156,7 +156,7 @@ std::pair<Line, Line> Circle::commonOuterTangents(const Circle &c) const
 
 std::pair<Line, Line> Circle::commonInnerTangents(const Circle &c) const
 {
-    if(!(isValid && c.isValid) || (Vector(x, y).dist(Vector(c.x, c.y)) < r + c.r))
+    if (!(isValid && c.isValid) || (Vector(x, y).dist(Vector(c.x, c.y)) < r + c.r))
     {
         return std::pair<Line, Line>(Line(false), Line(false));
     }
@@ -188,7 +188,7 @@ std::pair<Line, Line> Circle::commonInnerTangents(const Circle &c) const
 
 bool Circle::isTangent(const Line &l) const
 {
-    if(!(isValid && l.isValid))
+    if (!(isValid && l.isValid))
     {
         return false;
     }
@@ -198,10 +198,19 @@ bool Circle::isTangent(const Line &l) const
 
 int Circle::where(const Vector &v) const
 {
-    if(!(isValid && v.isValid))
+    if (!(isValid && v.isValid))
     {
         return -100;
     }
     Vector O(x, y);
     return signum((O - v).length() - r);
 }
+
+Line Circle::radixLine(const Circle &c) const
+{
+    // (x - x1) ^ 2 + (y - y1) ^ 2 - (x - x2) ^ 2 - (y - y2) ^ 2 = r1 ^ 2 - r2 ^ 2
+    // x1^2 - 2*x*x1 + y1^2 - 2*y*y1 -x2^2 + 2*x*x2 - y2^2 + 2*y*y2 = r1^2 - r2^2
+    // x * (-2 * x1 + 2 * x2) + y * (-2 * y1 + 2 * y2) + x1^2 + y1^2 - r1^2 - x2^2 -y2^2 + r2^2 = 0
+    return Line(2 * (c.x - x), 2 * (c.y - y), x * x + y * y - r * r - c.x * c.x - c.y * c.y + c.r * c.r);
+}
+

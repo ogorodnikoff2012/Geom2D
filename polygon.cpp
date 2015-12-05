@@ -12,7 +12,7 @@ Polygon::Polygon(const std::vector<Vector> &points, const bool isValid_) :
     points(points)
 {
     isValid = isValid_;
-    for(int i = 0; i < points.size(); i++)
+    for (int i = 0; i < (int) points.size(); i++)
     {
         isValid &= points[i].isValid;
     }
@@ -20,7 +20,7 @@ Polygon::Polygon(const std::vector<Vector> &points, const bool isValid_) :
 
 double Polygon::area() const
 {
-    if(!isValid)
+    if (!isValid)
     {
         return -100;
     }
@@ -39,7 +39,7 @@ double Polygon::area() const
 
 bool Polygon::isConvex() const
 {
-    if(!isValid)
+    if (!isValid)
     {
         return false;
     }
@@ -60,7 +60,7 @@ bool Polygon::isConvex() const
 
 bool Polygon::hasPoint(const Vector &v) const
 {
-    if(!(isValid && v.isValid))
+    if (!(isValid && v.isValid))
     {
         return false;
     }
@@ -107,6 +107,11 @@ Polygon Polygon::convexHull() const
         return Polygon(false);
     }
 
+    if (this->points.size() < 3)
+    {
+        return Polygon(this->points);
+    }
+
     std::vector<Vector> points = this->points;
     int idx = 0;
     int n = points.size();
@@ -147,33 +152,33 @@ Polygon Polygon::convexHull() const
 std::pair<Polygon, Polygon> Polygon::split(const Line &l) const
 // l.where(): First -> -1; Second -> 1
 {
-    if(!(isValid && l.isValid))
+    if (!(isValid && l.isValid))
     {
         return std::pair<Polygon, Polygon>(Polygon(false), Polygon(false));
     }
 
     vector<Vector> first, second;
     int lastWhere = l.where(points[0]);
-    for(int i = 0; i < points.size(); i++)
+    for (int i = 0; i < (int) points.size(); i++)
     {
         int where = l.where(points[i]);
-        if(where * lastWhere == -1)
+        if (where * lastWhere == -1)
         {
             Vector intersection = l.intersect(Line(points[i], points[i-1]));
             first.push_back(intersection);
             second.push_back(intersection);
         }
 
-        if(where != 1)
+        if (where != 1)
             first.push_back(points[i]);
-        if(where != -1)
+        if (where != -1)
             second.push_back(points[i]);
 
         lastWhere = where;
     }
 
     int where = l.where(points[0]);
-    if(where * lastWhere == -1)
+    if (where * lastWhere == -1)
     {
         Vector intersection = l.intersect(Line(points[0], points.back()));
         first.push_back(intersection);
@@ -190,18 +195,18 @@ std::pair<Polygon, Polygon> Polygon::split(const Line &l) const
 
 Polygon Polygon::intersection(const Polygon &p) const
 {
-    if(!(isValid && p.isValid))
+    if (!(isValid && p.isValid))
     {
         return Polygon(false);
     }
 
     Polygon ans = p;
-    for(int i = 0, n = points.size(); i < n; i++)
+    for (int i = 0, n = points.size(); i < n; i++)
     {
         Vector A = points[i], B = points[(i + 1) % n];
         Line l(A, B);
         std::pair<Polygon, Polygon> pp = ans.split(l);
-        if(l.where(points[(i + 2) % n]) == 1)
+        if (l.where(points[(i + 2) % n]) == 1)
         {
             ans = pp.second;
         }

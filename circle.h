@@ -42,6 +42,7 @@ public:
     std::pair<Line, Line> commonInnerTangents(const Circle &c) const;
     bool isTangent(const Line &l) const;
     int where(const Vector &v) const;
+    Line radixLine(const Circle &c) const;
 };
 }
 #endif // CIRCLE_H

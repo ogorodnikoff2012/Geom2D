@@ -33,7 +33,7 @@ void writePolygon(ostream &out, const Polygon &p)
 
     vector<Vector> v = p.points;
 
-    for(int i = 0; i < v.size(); i++)
+    for(int i = 0; i < (int) v.size(); i++)
     {
         out <<  v[i] << '\n';
     }
@@ -139,7 +139,7 @@ int genConvexHull()
     cout << "Convex hull's vertices:\n";
 
     if(color)    cout << "\x1b[32m"; // Green foreground
-    for(int i = 0; i < v.size(); i++)
+    for(int i = 0; i < (int) v.size(); i++)
     {
         cout << v[i] << '\n';
     }

@@ -18,7 +18,7 @@ Line::Line(const Vector &A, const Vector &B, const bool isValid_)
 
 double Line::dist(const Vector &A) const
 {
-	if(!(isValid && A.isValid))
+	if (!(isValid && A.isValid))
 	{
 		return -1;
 	}
@@ -28,7 +28,7 @@ double Line::dist(const Vector &A) const
 
 Vector Line::intersect(const Line &l) const
 {
-	if(!(isValid && l.isValid))
+	if (!(isValid && l.isValid))
 	{
 		return Vector(false);
 	}
@@ -59,7 +59,7 @@ Vector Line::intersect(const Line &l) const
 Line Line::normalize()
 {
 	double k = sqrt(a * a + b * b) * signum(a);
-	if(k != 0)
+	if (k != 0)
 	{
 		a /= k;
 		b /= k;
@@ -86,7 +86,7 @@ bool Line::operator ||(const Line &l) const
 
 int Line::where(const Vector &v) const
 {
-	if(!(isValid && v.isValid))
+	if (!(isValid && v.isValid))
 	{
 		return -100;
 	}
@@ -100,7 +100,7 @@ bool Line::operator ==(const Line &l) const
 
 Vector Line::projection(const Vector &v) const
 {
-	if(!(isValid && v.isValid))
+	if (!(isValid && v.isValid))
 	{
 		return Vector(false);
 	}
@@ -110,7 +110,7 @@ Vector Line::projection(const Vector &v) const
 
 void Line::moveToVector(const Vector &v)
 {
-	if(!(isValid && v.isValid))
+	if (!(isValid && v.isValid))
 	{
 		return;
 	}
