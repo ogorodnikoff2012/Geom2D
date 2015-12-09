@@ -10,6 +10,7 @@ double toDegrees(const double rad);
 bool equal(const double a, const double b);
 int signum(double a);
 double max(double a, double b);
+double min(double a, double b);
 
 }
 

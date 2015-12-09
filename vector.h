@@ -38,6 +38,7 @@ public:
     Vector operator -(const Vector &v) const;
     double operator *(const Vector &v) const;
     Vector operator *(const double d) const;
+    Vector operator /(const double d) const;
     double operator /(const Vector &v) const;
     double operator ^(const Vector &v) const;
     double length() const;

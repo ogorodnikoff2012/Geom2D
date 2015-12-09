@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include "vector.h"
+#include "line.h"
 #include "polygon.h"
 
 using namespace std;
@@ -45,7 +46,16 @@ bool help = false;
 
 int genConvexHull();
 
-int main(int argc, char *argv[])
+int main()
+{
+    Vector A(0, 0), B(1, 1);
+    Line l(A, B);
+    l.moveToVector(Vector(2, 1));
+    cout << l.a << ' ' << l.b << ' ' << l.c << '\n';
+    return 0;
+}
+
+int hrenmain(int argc, char *argv[])
 {
     for(int i = 0; i < argc; i++)
     {

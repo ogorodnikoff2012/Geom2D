@@ -32,3 +32,8 @@ double geom2d::max(double a, double b)
 {
     return a < b ? b : a;
 }
+
+double geom2d::min(double a, double b)
+{
+    return a < b ? a : b;
+}

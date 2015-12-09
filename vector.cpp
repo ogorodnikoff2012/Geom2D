@@ -17,12 +17,17 @@ Vector Vector::operator +(const Vector &v) const
 
 Vector Vector::operator -(const Vector &v) const
 {
-    return Vector(x - v.x, y - v.y, isValid && isValid);
+    return Vector(x - v.x, y - v.y, isValid && v.isValid);
 }
 
 Vector Vector::operator *(const double d) const
 {
     return Vector(x * d, y * d, isValid);
+}
+
+Vector Vector::operator /(const double d) const
+{
+    return Vector(x / d, y / d, isValid && !equal(d, 0));
 }
 
 double Vector::operator *(const Vector &v) const
@@ -94,7 +99,7 @@ Vector Vector::operator *=(double d)
 Vector Vector::normalize()
 {
     double l = length();
-    if (l != 0)
+    if (!equal(l, 0))
     {
         x /= l;
         y /= l;
@@ -121,12 +126,12 @@ bool Vector::operator ||(const Vector &v) const
 
 Vector Vector::rotated(const double phi) const
 {
-    Vector v = normalized();
+    Vector v(*this);
     double cosa = v.x, sina = v.y;
     double cosphi = cos(phi), sinphi = sin(phi);
-    v.x = cosa * cosphi + sina * sinphi;
-    v.y = sina * cosphi - cosa * sinphi;
-    return v * length();
+    v.x = cosa * cosphi - sina * sinphi;
+    v.y = sina * cosphi + cosa * sinphi;
+    return v;
 }
 
 Vector Vector::rotate(const double phi)

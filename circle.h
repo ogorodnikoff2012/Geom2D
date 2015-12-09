@@ -2,6 +2,7 @@
 #define CIRCLE_H
 
 #include <utility>
+#include <cstring>
 
 namespace geom2d
 {
@@ -33,7 +34,7 @@ public:
 
     Circle(const Vector &center, const Vector &A, const bool isValid = true);
     Circle(const Vector &center, const double r, const bool isValid = true);
-    std::pair<Line, Line> tangents(const Vector &v) const;
+    std::pair<Line, Line> tangents(const Vector &v, Vector *X1 = NULL, Vector *X2 = NULL) const;
     std::pair<Vector, Vector> intersect(const Line &l) const;
     std::pair<Vector, Vector> intersect(const Circle &c) const;
     bool operator ==(const Circle &c) const;
@@ -43,6 +44,7 @@ public:
     bool isTangent(const Line &l) const;
     int where(const Vector &v) const;
     Line radixLine(const Circle &c) const;
+    Vector center() const;
 };
 }
 #endif // CIRCLE_H

@@ -24,7 +24,7 @@ Circle::Circle(const Vector &center, const double r, const bool isValid_) :
 
 }
 
-std::pair<Line, Line> Circle::tangents(const Vector &A) const
+std::pair<Line, Line> Circle::tangents(const Vector &A, Vector *_X1, Vector *_X2) const
 {
     if (!(isValid && A.isValid))
     {
@@ -33,11 +33,33 @@ std::pair<Line, Line> Circle::tangents(const Vector &A) const
 
     Vector O(x, y);
 
+    if (equal(r, 0))
+    {
+
+        if (_X1 != NULL) {
+            *_X1 = O;
+        }
+
+        if (_X2 != NULL) {
+            *_X2 = O;
+        }
+        
+        return std::pair<Line, Line>(Line(A, O), Line(false));
+    }
+
     double oxProjection = r * r / O.dist(A);
     Vector OH = (A - O).normalize() * oxProjection;
     Vector H = O + OH;
     Vector HX = OH.getNormal() * sqrt(r * r - oxProjection * oxProjection);
     Vector X1 = H + HX, X2 = H - HX;
+    
+    if (_X1 != NULL) {
+        *_X1 = X1;
+    }
+
+    if (_X2 != NULL) {
+        *_X2 = X2;
+    }
 
     switch (where(A))
     {
@@ -81,10 +103,7 @@ std::pair<Vector, Vector> Circle::intersect(const Line &l) const
 
 std::pair<Vector, Vector> Circle::intersect(const Circle &c) const
 {
-    double a = 2 * (c.x - x);
-    double b = 2 * (c.y - y);
-    double c_ = x * x - c.x * c.x + y * y - c.y * c.y + c.r * c.r - r * r;
-    return intersect(Line(a, b, c_, c.isValid));
+    return intersect(radixLine(c));
 }
 
 bool Circle::operator ==(const Circle &c) const
@@ -110,47 +129,27 @@ std::pair<Line, Line> Circle::commonOuterTangents(const Circle &c) const
 
     if (r < c.r)
     {
-        point.x = x;
-        point.y = y;
-        pseudo.x = c.x;
-        pseudo.y = c.y;
-        pseudo.r = c.r - r;
+        point = Vector(x, y);
+        pseudo = Circle(c.x, c.y, c.r - r);
     }
     else
     {
-        point.x = c.x;
-        point.y = c.y;
-        pseudo.x = x;
-        pseudo.y = y;
-        pseudo.r = r - c.r;
+        point = Vector(c.x, c.y);
+        pseudo = Circle(x, y, r - c.r);
     }
 
-    std::pair<Line, Line> ts = pseudo.tangents(point);
-    std::pair<Vector, Vector> normals(ts.first.getNormal() * fabs(r - c.r),
-                                      ts.second.getNormal() * fabs(r - c.r));
-
-    if (ts.first || ts.second)
+    Vector X1, X2;
+    std::pair<Line, Line> ts = pseudo.tangents(point, &X1, &X2);
+    if (!ts.second.isValid)
     {
-        ts.first.moveToVector(normals.first);
-        ts.second.moveToVector(-normals.first);
+        ts.first.moveToVector((point - pseudo.center()).getNormal() * r);
+        ts.first.moveToVector(-(point - pseudo.center()).getNormal() * r);
     }
     else
     {
-        ts.first.moveToVector(normals.first);
-
-        if (!(isTangent(ts.first) && c.isTangent(ts.first)))
-        {
-            ts.first.moveToVector(-2 * normals.first);
-        }
-
-        ts.second.moveToVector(normals.second);
-
-        if (!(isTangent(ts.second) && c.isTangent(ts.second)))
-        {
-            ts.second.moveToVector(-2 * normals.second);
-        }
+        ts.first .moveToVector((X1 - pseudo.center()).normalized() * min(r, c.r));
+        ts.second.moveToVector((X2 - pseudo.center()).normalized() * min(r, c.r));
     }
-
     return ts;
 }
 
@@ -164,26 +163,25 @@ std::pair<Line, Line> Circle::commonInnerTangents(const Circle &c) const
     Vector point(c.x, c.y);
     Circle pseudo(x, y, r + c.r);
 
-    std::pair<Line, Line> ts = pseudo.tangents(point);
-    std::pair<Vector, Vector> normals(ts.first.getNormal() * fabs(r - c.r),
-                                      ts.second.getNormal() * fabs(r - c.r));
+    Vector X1, X2;
+    std::pair<Line, Line> ts = pseudo.tangents(point, &X1, &X2);
 
-    ts.first.moveToVector(normals.first);
-
-    if (!(isTangent(ts.first) && c.isTangent(ts.first)))
+    if (!ts.second.isValid)
     {
-        ts.first.moveToVector(-2 * normals.first);
+        ts.first .moveToVector((pseudo.center() - point).normalized() * c.r);
+        ts.second = ts.first;
     }
-
-    ts.second.moveToVector(normals.second);
-
-    if (!(isTangent(ts.second) && c.isTangent(ts.second)))
+    else
     {
-        ts.second.moveToVector(-2 * normals.second);
+        ts.first .moveToVector((pseudo.center() - X1).normalized() * c.r);
+        ts.second.moveToVector((pseudo.center() - X2).normalized() * c.r);
     }
-
-
     return ts;
+}
+
+Vector Circle::center() const
+{
+    return Vector(x, y, isValid);
 }
 
 bool Circle::isTangent(const Line &l) const
@@ -211,6 +209,6 @@ Line Circle::radixLine(const Circle &c) const
     // (x - x1) ^ 2 + (y - y1) ^ 2 - (x - x2) ^ 2 - (y - y2) ^ 2 = r1 ^ 2 - r2 ^ 2
     // x1^2 - 2*x*x1 + y1^2 - 2*y*y1 -x2^2 + 2*x*x2 - y2^2 + 2*y*y2 = r1^2 - r2^2
     // x * (-2 * x1 + 2 * x2) + y * (-2 * y1 + 2 * y2) + x1^2 + y1^2 - r1^2 - x2^2 -y2^2 + r2^2 = 0
-    return Line(2 * (c.x - x), 2 * (c.y - y), x * x + y * y - r * r - c.x * c.x - c.y * c.y + c.r * c.r);
+    return Line(2 * (c.x - x), 2 * (c.y - y), x * x + y * y - r * r - c.x * c.x - c.y * c.y + c.r * c.r, isValid && c.isValid);
 }
 
